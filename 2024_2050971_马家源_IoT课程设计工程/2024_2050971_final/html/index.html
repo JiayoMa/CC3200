@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/style.css" >
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/com.TI.tokenPoller.js"></script>
+<script src="js/page-actions.js"></script>
+<script type="text/javascript">
+$(function() {
+	var deviceType = "__SL_G_V.D",
+		len = deviceType.length,
+		deviceTypeEnd = deviceType.substring(len-2,len),
+		cc3200Vals = ['10','11','13'];
+	if ($.inArray(deviceTypeEnd, cc3200Vals) > -1) {
+		$('span.deviceName').html('CC3200');
+	} else {
+		$('span.deviceName').html('CC3100');
+	}
+});
+</script>
+<title>Overview</title>
+</head>
+<body>
+<div class="header">
+	<div class="ti-logo"></div>
+    <div class="page-title"></div>
+    <div class="red-bar">Tongji University&trade; CEIE&reg; 2050971</div>
+    <div class="status-bar"> Current Status: <em>Test</em></div> <!-- toggle class "online" to change status - use js to change status message (later) -->
+</div>
+<div class="tabs">
+<ul>
+<li class="" id="welcome"><a href="demos.html"><span>System</span></a></li>
+ <li class="" id="overview"><a href="overview.html"><span>Overview</span></a></li>
+<li class="" id="about"><a href="about.html"><span>About</span></a></li>
+<li class="" id="setup"><a href="setup.html"><span>Setup</span></a></li>
+    
+</ul>
+</div>
+<div class="content">
+<div class="demoLink automation" onclick="window.open('demos-sprinkler.html', '_self');"></div>
+<div class="demoLink appliances" onclick="window.open('demos-appliances.html', '_self');"></div>
+<div class="demoLink safety" onclick="window.open('demos-security.html', '_self');"></div>
+<div class="demoLink smartEnergy" onclick="window.open('demos-energy.html', '_self');"></div>
+<br style="clear:both;" />
+<div class="content">
+<p>智能家居物联网系统的各个功能如下所示：</p>
+<ul>
+<li><a href="demos-sprinkler.html">家居自动化</a></li>
+<li><a href="demos-appliances.html">家用电器</a></li>
+<li><a href="demos-security.html">按摩椅功能</a></li>
+<li><a href="demos-energy.html">防火检测</a></li>
+</ul>
+<p>只要点击任意图标即可实时查看功能实现</p>
+<p>智能家居物联网系统 2050971 马家源</p>
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+<br />
+</div>
+</body>
+</html>

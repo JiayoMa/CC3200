@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/style.css" >
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/com.TI.numericStepper.js"></script>
+<script src="js/com.TI.tokenPoller.js"></script>
+<script src="js/page-actions.js"></script>
+<script type="text/javascript">
+$(function() {
+	var Device_Temperature = $('#Device_Temperature_out'),
+		lastInput = 50,
+		lastState = '_OFF',
+		lastTemp;
+
+	function dampenTempChange(oldTemp, newTemp) {
+		var maxIncrement = 1,
+			incrementPercent = 0.75,
+			tempChange = (parseInt(newTemp) - oldTemp)*(incrementPercent);
+		if ((tempChange > 0) && (tempChange > maxIncrement)) { 
+			tempChange = maxIncrement;
+		} else if ((tempChange < 0) && (tempChange < (-1)*maxIncrement)) { 
+			tempChange = (-1)*maxIncrement;
+		}
+		return tempChange;
+	}
+
+// 修改后的 checkTemperatureAndShowGif 函数
+function checkTemperatureAndShowGif(temp) {
+	var imgElement = document.getElementById('alarmImage'); // 使用正确的ID获取图像元素
+	if (lastInput > temp) {
+		imgElement.style.display = 'block';
+	} else if (lastInput <= temp) {
+		imgElement.style.display = 'none';
+	}
+}
+	function initDemoPolling() {
+		var demoPolling = new com.TI.tokenPoller({
+				"paramPage": "param_demos.html", 
+				"refreshRate": 500, // 每半秒一次
+				"valueMap": [{
+				"paramId": "Device_Temperature",
+					"outputSuccess": function(output) {
+						// 设置初始温度
+						if (!lastTemp) {
+							lastTemp = parseInt(output);
+						} else {
+							// 如果已有温度值，平滑变化
+							lastTemp += dampenTempChange(lastTemp, output);
+						}
+
+						var temp = parseInt(lastTemp),
+							newState = '_OFF';
+
+						// 更新HTML中的温度显示
+						Device_Temperature.html(temp);
+
+						// 在这里调用 checkTemperatureAndShowGif 来决定是否显示GIF
+						checkTemperatureAndShowGif(temp);
+
+						// 更新LED状态逻辑保持不变...
+						if (lastInput > temp) {
+							newState = '_Blink';
+						} else if (lastInput < temp) {
+							newState = '_ON';
+						} else {
+							newState = '_OFF';
+						}
+						if (newState != lastState) {
+							lastState = newState;
+							com.TI.toggleLED(newState);
+						}
+					},
+					"outputDefault": function() {
+						Device_Temperature.html("<i>reloading</i>");
+					}
+				}]
+			});
+	}
+var initialTemp = parseInt(Device_Temperature.text());
+	if (!isNaN(initialTemp)) {
+		checkTemperatureAndShowGif(initialTemp);
+	}
+
+	$('#tempInput').TINumericStepper({
+		"defaultValue": lastInput,
+		"max": 150,
+		"min": 0,
+		"onUpdate": function(val){
+			lastInput = val;
+			// 当理想温度改变时，立即检查是否应显示GIF
+			var currentTemp = parseInt(Device_Temperature.text());
+			if (!isNaN(currentTemp)) {
+				checkTemperatureAndShowGif(currentTemp);
+			}
+		}
+	});
+
+	initDemoPolling();
+
+	// 设置当前选项卡为激活状态
+	$("#demos").addClass("active");
+});
+</script>
+<title>Overview</title>
+</head>
+<body>
+<div class="header">
+	<div class="ti-logo"></div>
+    <div class="page-title"></div>
+    <div class="red-bar">SimpleLink&trade; Wi-Fi&reg; Family</div>
+    <div class="status-bar"> Current Status: <em>Offline</em></div> <!-- toggle class "online" to change status - use js to change status message (later) -->
+</div>
+<div class="tabs">
+<ul>
+	<li class="" id="welcome"><a href="demos.html"><span>System</span></a></li>
+    	<li class="" id="overview"><a href="overview.html"><span>Overview</span></a></li>
+        <li class="" id="about"><a href="about.html"><span>About</span></a></li>
+        <li class="" id="setup"><a href="setup.html"><span>Setup</span></a></li>
+</ul>
+</div>
+<div class="content">
+	<div class="demoLink automation" onclick="window.open('demos-sprinkler.html', '_self');"></div>
+	<div class="demoLink appliances" onclick="window.open('demos-appliances.html', '_self');"></div>
+	<div class="demoLink safety" onclick="window.open('demos-security.html', '_self');"></div>
+	<div class="demoLink smartEnergy active" onclick="window.open('demos-energy.html', '_self');"></div>
+	<br style="clear:both;" />
+
+	<h2>防火检测</h2>
+	<p>点击箭头以改变所需的温度。当前温度显示如下。如果当前的温度较高，红色的 LED 会闪烁。如果当前温度较低，红色 LED 将保持亮度。</p>
+	<p for="slider-0"><strong>理想温度 (F):</strong></p>
+	<div id="tempInput"></div>
+	<p><strong>当前温度:</strong> <span id="Device_Temperature_out"><i>reloading</i></span></p>
+	<br />
+	<p style="font-weight:normal">
+	实时监测厨房等用火地点的温度情况，有特殊情况时及时报警，并且触发烟雾报警器。
+	<br />
+	</p>
+	<div class="switchControl" id="alarmSwitch">
+	<img src="images/119.jpg" id="alarmImage" name="119" width="245" height="210" style="display:none;" />
+</div>
+
+</div>
+</body>
+</html>

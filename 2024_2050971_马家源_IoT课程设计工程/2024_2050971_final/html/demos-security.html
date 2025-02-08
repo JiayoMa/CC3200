@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/style.css" >
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/com.TI.tokenPoller.js"></script>
+<script src="js/page-actions.js"></script>
+<script type="text/javascript">
+$(function() {
+	var alarmSwitch = $('#alarmSwitch'),
+		switchBtn = $('#switchImage'),
+		alarmImage = $('#alarmImage'),
+		demoPolling = new com.TI.tokenPoller({
+			"paramPage": "param_demos.html", 
+			"refreshRate": 200,	// every half second
+			"valueMap": [{
+			"paramId": "Device_Accelerometer",
+				"outputSuccess": function(output) {
+					if (switchBtn.hasClass('on')) {
+						if (output == "Running") {
+							alarmImage.attr('src',"images/demo-security-alarmOn.jpg");	
+							com.TI.toggleLED('_ON');
+						} else {
+							alarmImage.attr('src',"images/demo-security-alarmOff.jpg");
+							com.TI.toggleLED('_OFF');
+						}
+					} else {
+						alarmImage.attr('src',"images/demo-security-alarmOff.jpg");
+						com.TI.toggleLED('_OFF');
+					}
+				},
+				"outputDefault": function() {
+					alarmImage.attr('src',"images/demo-security-alarmOff.jpg");
+					com.TI.toggleLED('_OFF');
+				}
+			}]
+		});
+		
+	alarmSwitch.click(function(){
+		if (switchBtn.hasClass('on')) {
+			switchBtn.removeClass('on');
+		} else {
+			switchBtn.addClass('on');
+		}
+	});
+});
+</script>
+<title>Overview</title>
+</head>
+<body>
+<div class="header">
+	<div class="ti-logo"></div>
+    <div class="page-title"></div>
+    <div class="red-bar">Tongji University&trade; CEIE&reg; 2050971</div>
+    <div class="status-bar"> Current Status: <em>Test</em></div> <!-- toggle class "online" to change status - use js to change status message (later) -->
+</div>
+<div class="tabs">
+<ul>
+	<li class="" id="welcome"><a href="demos.html"><span>System</span></a></li>
+    	<li class="" id="overview"><a href="overview.html"><span>Overview</span></a></li>
+        <li class="" id="about"><a href="about.html"><span>About</span></a></li>
+        <li class="" id="setup"><a href="setup.html"><span>Setup</span></a></li>
+</ul>
+</div>
+<div class="content">
+	<div class="demoLink automation" onclick="window.open('demos-sprinkler.html', '_self');"></div><div class="demoLink appliances" onclick="window.open('demos-appliances.html', '_self');"></div><div class="demoLink safety active" onclick="window.open('demos-security.html', '_self');"></div><div class="demoLink smartEnergy" onclick="window.open('demos-energy.html', '_self');"></div>
+	<div class="demo">
+		<h2>按摩椅功能</h2>
+		<p style="font-weight:normal;">切换开关打开系统。拿起并摇动 LaunchPad，看到页面上的按摩椅启动。</p>
+	    <div class="switchControl" id="alarmSwitch">
+			<div class="sprinklerOn">On</div>
+			<div id="switchImage"></div>
+			<div class="sprinklerOff">Off</div>
+		</div>
+	    <img src="images/demo-security-alarmOff.jpg" name="alarmImage" id="alarmImage" />
+	</div><br />
+</div>
+</body>
+</html>

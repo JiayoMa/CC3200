@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/style.css" >
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/com.TI.tokenPoller.js"></script>
+<script src="js/page-actions.js"></script>
+<script type="text/javascript">
+$(function() {
+	var sprinklerSwitch = $('#sprinklerSwitch'),
+		switchBtn = $('#switchImage'),
+		sprinkler = $('#sprinkler'),
+		spriklerRunning = false,
+		imageOn = false,
+		sprinklerToggle = setInterval(function() {
+                        if (spriklerRunning) {
+                                if (imageOn) {
+                                        sprinkler.attr('src',"images/demo-sprinkler-off.jpg");        
+                                        com.TI.toggleLED('_OFF');
+                                        imageOn = false;
+                                } else {        
+                                        sprinkler.attr('src',"images/demo-sprinkler-on.jpg");
+                                        com.TI.toggleLED('_ON');
+                                        imageOn = true;
+                                }
+                        }
+                }, 300);
+		
+	sprinklerSwitch.click(function(){
+		if (switchBtn.hasClass('on')) {
+			switchBtn.removeClass('on');
+			//com.TI.toggleLED('_OFF');
+			spriklerRunning = false;
+			sprinkler.attr('src',"images/demo-sprinkler-off.jpg");	
+			imageOn = false;
+		} else {
+			switchBtn.addClass('on');
+			//com.TI.toggleLED('_Blink');
+			spriklerRunning = true;
+			imageOn = true;
+		}
+	});
+});
+
+
+</script>
+<title>Overview</title>
+</head>
+<body>
+<div class="header">
+  <div class="ti-logo"></div>
+  <div class="page-title">
+    
+  </div>
+  <div class="red-bar">Tongji University&trade; CEIE&reg; 2050971</div>
+  <div class="status-bar"> Current Status: <em>Test</em></div>
+  <!-- toggle class "online" to change status - use js to change status message (later) --> 
+</div>
+<div class="tabs">
+  <ul>
+    <li class="" id="welcome"><a href="demos.html"><span>System</span></a></li>
+    	<li class="" id="overview"><a href="overview.html"><span>Overview</span></a></li>
+        <li class="" id="about"><a href="about.html"><span>About</span></a></li>
+        <li class="" id="setup"><a href="setup.html"><span>Setup</span></a></li>
+  </ul>
+</div>
+<div class="content">
+  
+    <div class="demoLink automation active" onclick="window.open('demos-sprinkler.html', '_self');"></div>
+    <div class="demoLink appliances" onclick="window.open('demos-appliances.html', '_self');"></div>
+    <div class="demoLink safety" onclick="window.open('demos-security.html', '_self');"></div>
+    <div class="demoLink smartEnergy" onclick="window.open('demos-energy.html', '_self');"></div>
+  	<br style="clear:both" />
+  
+    <h2>家居自动化</h2>
+	<p>切换开关打开，看到在 LaunchPad 上的红色 LED 闪烁，切换开关关闭，关闭红色 LED。</p>
+    <div class="switchControl" id="sprinklerSwitch">
+		<div class="sprinklerOn">On</div>
+		<div id="switchImage"></div>
+		<div class="sprinklerOff">Off</div>
+	</div>
+    <img src="images/demo-sprinkler-off.jpg" id="sprinkler" style="max-width:325px;width:80%;height:342px\0/IE8+9;" />
+  
+  <p>外面在下雨，你忘了关洒水器。没关系。这个演示展示了如何使用 我们的系统会通过云控制洒水系统。
+<br/> <br/> 简单地点击屏幕上的开关按钮，你就会看到洒水器的开启和关闭，也可以看到 LED 灯闪烁和关闭。</p>
+ </div>
+</body>
+</html>
